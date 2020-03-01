@@ -1,0 +1,23 @@
+Welcome to 2020!
+
+Installing
+==========
+1) get 2020.tar.gz from web http://www.geocities.com/ted_huntington
+2) tar -xvzf 2020.tar.gz
+3) cd 2020
+4) make
+[Please use the most recent gcc, I had no problems with 3.2]
+(note:  if you get a seg fault when running 2020, try "make less".
+With an older version of gcc there can be a problem with the "floodfill" function
+using recursion that uses more stack space than available. This will use a different
+flood fill, and the pictures may not look complete but you can still play the game.)
+5) make install
+6) 2020
+
+Enjoy!
+send any messages to tedhuntington@tedhuntington.com, or ted_huntington@netzero.net
+
+Thanks
+Ted Huntington
+tedhuntington.com
+

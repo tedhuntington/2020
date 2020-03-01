@@ -1,0 +1,5 @@
+# record 4 seconds of audio from microphone
+% dd bs=8k count=4 </dev/audio >sample.au
+# play back sound
+% cat sample.au >/dev/audio
+
