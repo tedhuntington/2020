@@ -1301,7 +1301,7 @@ switch(wdflag)  /*branch on number of words in sentence*/
       break;
     case 130:  /*buy*/
     case 131:  /*purch*/
-       if (sent[438])  /*ticket*/
+       if (sent[1]==438)  /*ticket*/
 	    buyticket();
        break;
     case 134: /*give*/

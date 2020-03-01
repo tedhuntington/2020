@@ -43,11 +43,11 @@ char upat1[8] =  {0x18, 0x3c,0x7e,0xff,0xff,0x7e,0x3c,0x18};
 char upat2[8] =  {0x00, 0xf7,0xf7,0xf7,0x00,0xfe,0xfe,0xfe};
 char upat3[8] =  {0xee, 0xee,0xee,0xee,0xe0,0xee,0xee,0x0e};
 #ifdef Linux
-extern char *PATH;
+extern char PATH[512];
 char LPATH[] = {0x2f,'\0'};
 #endif
 #ifdef DOS
-char PATH[256];
+char PATH[512];
 char LPATH[] = {0x5c,'\0'};
 #endif
 char cursor[2] = {0xdb, 0x00};
@@ -59,12 +59,12 @@ int savd;			/*picture saved?*/
 int midx,midy;		/*midpoint for circle*/
 int radx,rady;		/*radii for ellipse*/
 #ifdef Linux
-short int skin[8];
+short int skin[9];
 #endif
 #ifdef DOS
-int skin[8];             /*characters attributes*/
+int skin[9];             /*characters attributes*/
 #endif
-char name[30],name2[30],name3[30];
+char name[512],name2[512],name3[512];
 char names[5][11] = {"Tara","Tan","Maria","Juan","Chana"};
 int rep;    /*repeat load file- error*/
 int qflg;
@@ -346,7 +346,8 @@ pixmap[0] = XCreatePixmap(xdisplay, xwindow, 640,350, depth);
         XFlush (xdisplay);
 
 
-XSetForeground (xdisplay, xgc, 0x00ffffff);
+//XSetForeground (xdisplay, xgc, 0x00ffffff);
+XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,0,640,300);
 XSetForeground (xdisplay, xgc, 0x0);
 //XFillRectangle (xdisplay, pixmap[0],xgc,0,300,640,50);
@@ -396,7 +397,8 @@ lnum=0;
 for(cnt=0;cnt<12;cnt++) curnum[cnt]=0;
 curnum[0]=1;
 #ifdef Linux
-XSetForeground (xdisplay, xgc, 0x00ffffff);
+//XSetForeground (xdisplay, xgc, 0x00ffffff);
+XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,0,640,300);
 XSetForeground (xdisplay, xgc, 0x0);
 //XFillRectangle (xdisplay, pixmap[0],xgc,0,300,640,50);
@@ -469,7 +471,8 @@ if (univ!=3)
     load_file("char1.pic");
 #endif
 #ifdef Linux
-XSetForeground (xdisplay, xgc, 0x00ffffff);
+//XSetForeground (xdisplay, xgc, 0x00ffffff);
+XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,0,640,300);
 XSetForeground (xdisplay, xgc, 0x0);
 //XFillRectangle (xdisplay, pixmap[0],xgc,0,300,640,50);
@@ -530,13 +533,12 @@ else
       {
       strcpy(tfil,PATH);
       strcpy(lfname,name);
-      lfname[8]=0;
+      //lfname[8]=0;
       strcat(tfil,lfname);
       strcpy(name2,tfil);
-      strcpy(name3,tfil);
+      strcpy(name3,name);
      
 #ifdef Linux
-
       strcat(name3,".pic");
 #endif
 #ifdef DOS
@@ -588,7 +590,8 @@ else
 
 
 #ifdef Linux
-XSetForeground (xdisplay, xgc, 0x00ffffff);
+//XSetForeground (xdisplay, xgc, 0x00ffffff);
+XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,0,640,300);
 XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,300,640,50);
@@ -657,7 +660,8 @@ setfillstyle(SOLID_FILL, 15);
 oldcolor=lcolor;
 lcolor=15;
 #ifdef Linux
-XSetForeground (xdisplay, xgc, 0x00ffffff);
+//XSetForeground (xdisplay, xgc, 0x00ffffff);
+XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,0,640,300);
 XSetForeground (xdisplay, xgc, 0x0);
 XFillRectangle (xdisplay, pixmap[0],xgc,0,300,640,50);
@@ -769,6 +773,7 @@ XFillRectangle (xdisplay, pixmap[0], xgc, cursx+50-16,cursy-5,32,16);
 	  {
 #ifdef Linux
 	XSetForeground (xdisplay, xgc, 0x00ffffff);
+//	XSetForeground (xdisplay, xgc, 0x0);
 	XFillRectangle (xdisplay, pixmap[0], xgc, cursx+50,cursy-5,16,16);
 	XSetForeground (xdisplay, xgc, 0x0);
 	XDrawString(xdisplay,pixmap[0],xgc,cursx+50,cursy-1+(font_info->ascent+font_info->descent)/2,key,1);
@@ -1286,7 +1291,7 @@ if (getpixel(sx,sy)!=lb && (sx>-1) &&  (sy>-1) && (sx<640) && (sy<301))
 }
 #endif
 
-save_file(char lname[30])
+save_file(char lname[512])
 {
 FILE *fptr;
 
@@ -1372,11 +1377,11 @@ fclose(fptr);
 ex=1;
 }
 
-load_file(char lname[11])
+load_file(char lname[512])
 {
 FILE *fptr;
 int a;
-char tmpstr[255];
+char tmpstr[800];
 
 strcpy(tmpstr,PATH);
 strcat(tmpstr,LPATH);
@@ -1401,7 +1406,7 @@ savd=cur;	/*don't ask for saving each time no work is done*/
 fclose(fptr);
 }
 
-load_traits(char lname[11])
+load_traits(char lname[512])
 {
 #define BUFF1 11
 #define BUFF2 8

@@ -59,12 +59,12 @@ extern struct doors door[NUMDOR];
 extern struct daction *act1,*act2;   /*pic draw actions-begin link, temp link*/
 extern struct daction *act3;   /*temp2 link*/
 #ifdef Linux
-extern char *PATH;
+extern char PATH[512];
 extern char LPATH[];
 //extern char PATH[];
 #endif
 #ifdef DOS
-extern char PATH[256];
+extern char PATH[512];
 #endif
 extern struct objects obj[NUMOBJ];
 #ifdef Linux
@@ -1613,7 +1613,7 @@ else
 savmenu()
 {
 FILE *fptr;
-char sgstr[300],tmpstr[255];
+char sgstr[512],tmpstr[512];
 int b;
 
 /*get current save game names*/
@@ -1657,7 +1657,7 @@ spec[6]=0;
 resmenu()
 {
 FILE *fptr;
-char sgstr[300],tmpstr[255];
+char sgstr[512],tmpstr[512];
 int b;
 
 /*get current save game names*/
@@ -1909,7 +1909,7 @@ wrsgnm()
 {
 FILE *fptr;
 int b;
-char tmpstr[255];
+char tmpstr[512];
 
 strcpy(tmpstr,PATH);
 #ifdef Linux
@@ -2038,13 +2038,14 @@ rectangle(crx,cry,crx+siz,cry+19);
 savg(char sgnum[2])
 {
 FILE *fptr;
-char savgam[255],syslin[255],ch;
+char savgam[512],syslin[512],ch;
 
 
 #ifdef Linux
 sgnum[1]=0;
 #endif
 strcpy(savgam,PATH);
+strcat(savgam,LPATH);
 strcat(savgam,sgnum);
 #ifdef Linux
 strcat(savgam,".sav");
@@ -2126,7 +2127,7 @@ status=0;
   strcat(syslin,"def.pic ");
   strcat(syslin,PATH);
   strcat(syslin,LPATH);
-  strcat(syslin,"8");
+  strcat(syslin,"8"); //8#.pic are used to save the character used (note that there are 9#.pic rooms- but I must have skipped the 8#.pic rooms except 80)
 #endif
   strcat(syslin,sgnum);
   strcat(syslin,".pic > ");
@@ -2147,7 +2148,8 @@ status=0;
 resg(char rgnum[2])
 {
 FILE *fptr;
-char resgam[255],syslin[255],ch;
+char resgam[512],syslin[512],ch;
+int result;
 
 #ifdef Linux
   strcpy(syslin,"cp ");
@@ -2225,29 +2227,36 @@ fprintf(stderr,"No file %s\n",resgam);
     }
 else
    {
-   fread(&hx1,sizeof(hx1),1,fptr);     fread(&hx2,sizeof(hx2),1,fptr);
-   fread(&rx3,sizeof(rx3),1,fptr);     fread(&rx4,sizeof(rx4),1,fptr);
-   fread(&hy1,sizeof(hy1),1,fptr);     fread(&hy2,sizeof(hy2),1,fptr);
-   fread(&ry3,sizeof(ry3),1,fptr);     fread(&ry4,sizeof(ry4),1,fptr);
-   fread(&curloc,sizeof(curloc),1,fptr);
-   fread(&curloc3,sizeof(curloc3),1,fptr);
-   fread(&inv,sizeof(inv),1,fptr);
-   fread(&del,sizeof(del),1,fptr);
-   fread(&numimg,sizeof(numimg),1,fptr);
-   fread(&numimg3,sizeof(numimg3),1,fptr);
-   fread(&dx,sizeof(dx),1,fptr);
-   fread(&dy,sizeof(dy),1,fptr);
-   fread(&dx2,sizeof(dx2),1,fptr);
-   fread(&dy2,sizeof(dy2),1,fptr);
-   fread(&mode,sizeof(mode),1,fptr);
-   fread(&mode3,sizeof(mode3),1,fptr);
-   fread(&cash,sizeof(cash),1,fptr);
-   fread(&cash0,sizeof(cash0),1,fptr);
-   fread(&chrcur,sizeof(chrcur),1,fptr);
-   fread(&mtime,sizeof(mtime),1,fptr);
-   fread(&spec,sizeof(spec[0]),NUMSPEC,fptr);
-   fread(&skin,sizeof(skin[0]),8,fptr);
-   fread(&obj,sizeof(obj[0]),NUMOBJ,fptr);
+   result=fread(&hx1,sizeof(hx1),1,fptr);     
+   result=fread(&hx2,sizeof(hx2),1,fptr);
+   result=fread(&rx3,sizeof(rx3),1,fptr);     
+   result=fread(&rx4,sizeof(rx4),1,fptr);
+   result=fread(&hy1,sizeof(hy1),1,fptr);     
+   result=fread(&hy2,sizeof(hy2),1,fptr);
+   result=fread(&ry3,sizeof(ry3),1,fptr);     
+   result=fread(&ry4,sizeof(ry4),1,fptr);
+   result=fread(&curloc,sizeof(curloc),1,fptr);
+   result=fread(&curloc3,sizeof(curloc3),1,fptr);
+   result=fread(&inv,sizeof(inv),1,fptr);
+   result=fread(&del,sizeof(del),1,fptr);
+   result=fread(&numimg,sizeof(numimg),1,fptr);
+   result=fread(&numimg3,sizeof(numimg3),1,fptr);
+   result=fread(&dx,sizeof(dx),1,fptr);
+   result=fread(&dy,sizeof(dy),1,fptr);
+   result=fread(&dx2,sizeof(dx2),1,fptr);
+   result=fread(&dy2,sizeof(dy2),1,fptr);
+   result=fread(&mode,sizeof(mode),1,fptr);
+   result=fread(&mode3,sizeof(mode3),1,fptr);
+   result=fread(&cash,sizeof(cash),1,fptr);
+   result=fread(&cash0,sizeof(cash0),1,fptr);
+   result=fread(&chrcur,sizeof(chrcur),1,fptr);
+   result=fread(&mtime,sizeof(mtime),1,fptr);
+   result=fread(&spec,sizeof(spec[0]),NUMSPEC,fptr);
+   result=fread(&skin,sizeof(skin[0]),8,fptr);
+   result=fread(&obj,sizeof(obj[0]),NUMOBJ,fptr);
+   if (!result) {
+	printf("error reading from save game file.");
+   }
    }
 fclose(fptr);
 /*cur=chrcur;*/
@@ -2255,7 +2264,7 @@ fclose(fptr);
 newloc=curloc;
 curloc=80+rgnum[0]-48;  /*80 is save game character*/
   lflag=5;
-  load_file();
+  load_file(); //load the pics but not .dor .edg- that is done below with refresh()
   lflag=0;
 #ifdef Linux
 
@@ -2366,12 +2375,19 @@ else
 gotoship()
 {
 if (shipindx==5)
-  {putout("You have docked with the General's ship."); newloc=76;  hx1=rx3=325; hy1=ry3=225;refresh();}
-else
   {
-  if (shipindx==0)  {obj[246].loc=60; refresh();}
-  else
-    {
+  putout("You have docked with the General's ship."); 
+  newloc=76;  
+  hx1=325; 
+  rx3=hx1;
+  hy1=225;
+  ry3=hy1;
+  refresh();
+  } else {
+  if (shipindx==0)  {
+    obj[246].loc=60; 
+    refresh();
+  } else {
     obj[245+shipindx].loc=-2;
     obj[246+shipindx].loc=75;
     refresh();
@@ -2384,7 +2400,7 @@ elev()
 if (hy1>160) retsen=6;
 else
   {
-  door[0].vis=1; door[1].vis=1; door[2].vis=1;
+  //door[0].vis=1; door[1].vis=1; door[2].vis=1;
   if (hx1<260) {retsen=999;
 	       if (obj[245].loc==62&&obj[245].p[0]<260)
 		 {
@@ -2427,7 +2443,8 @@ else
 	       else
 		 {
 	       putout("The right elevator door opens.");
-	       door[2].vis=0; obj[245].p[0]=390; obj[245].loc=62;
+	       //door[2].vis=0;
+		   obj[245].p[0]=390; obj[245].loc=62;
                spec[23]=5;
 	       refresh();}
 	       }
@@ -2480,7 +2497,7 @@ else
   }
 }
 
-putout(char abc[300])		/*write out nicely to screen*/
+putout(char abc[512])		/*write out nicely to screen*/
 {
 #ifdef Linux
 #define W 12

@@ -27,15 +27,15 @@ all:
 	@echo  \#include \<stdlib\.h\> \\n\
 	\#include \<string\.h\> \\n \\n\
 	\#include \<stddef\.h\> \\n \\n\
-	char *PATH\; \\n\
+	char PATH[512]\; \\n\
 	set2020path\(\) \\n\
-	\{PATH\=malloc\(256\)\;  strcpy\(PATH\,\"`pwd`\"\)\;\}>path.c; 
+	\{strcpy\(PATH\,\"`pwd`\"\)\;\}>path.c; 
 	$(MAKE) CH20 
 
 less:
-	@echo  char *PATH\; \\n \
+	@echo  char PATH[512]\; \\n \
 	set2020path\(\) \\n \
-	\{PATH\=malloc\(256\)\;  strcpy\(PATH\,\"`pwd`\"\)\;\}>path.c;
+	\{strcpy\(PATH\,\"`pwd`\"\)\;\}>path.c;
 	$(MAKE) "CFLAGS=-O2 -mpentium -fomit-frame-pointer -ffast-math -mpreferred-stack-boundary=2 $(MODULE_INC) $(OSFLAG) -DFILL" CH20 
 
 CH20:	$(EXE) $(CHAR)

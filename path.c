@@ -3,6 +3,6 @@
  
 #include <stddef.h> 
  
-char *PATH; 
+char PATH[512]; 
 set2020path() 
-{PATH=malloc(256); strcpy(PATH,"/home/tedh/Downloads/2020");}
+{strcpy(PATH,"/home/tedh/Downloads/2020");}

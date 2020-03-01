@@ -241,12 +241,12 @@ char cursor[2] = {0xdb, 0x00};
 unsigned char hpat[16][9];
 
 //char *PATH;
-extern char *PATH;
+extern char PATH[512];
 char LPATH[] = {0x2f,'\0'};
 unsigned int *klmap;
 #endif
 #ifdef DOS
-char PATH[256];
+char PATH[512];
 char LPATH[] = {0x5c,'\0'};
 #endif
 #ifdef Linux
@@ -2641,7 +2641,7 @@ putlines2();	/*putimage lines*/
 
 timr()
 {
-char temp[4];
+char temp[10];
 
 #ifdef Linux
 //for Linux (and could be for DOS)
@@ -4144,7 +4144,7 @@ load_file()
 FILE *fptr;
 #ifdef Linux
 //char *nm2,*nm3,*nm;
-char nm2[256],nm3[256],nm[256];
+char nm2[512],nm3[512],nm[512];
 #endif
 #ifdef DOS
 char nm2[256],nm3[256],nm[256];
@@ -4482,21 +4482,22 @@ struct tmpobj
   };
 #endif
 struct tmpobj tmpo[1];
-char nm[256],nm2[256];
+char nm[512],nm2[512],newpath[512];
 int a;
 
 a=0;
 #ifdef DOS
 getcwd(PATH,512);
 #endif
-strcat(PATH,LPATH);
+strcpy(newpath,PATH);
+strcat(newpath,LPATH);
 
 #ifdef Linux
 fprintf(stderr,"Copying objects to memory...\n");
 #endif
 for(a=0;a<NUMOBJ;a++)
   {
-  strcpy(nm,PATH);
+  strcpy(nm,newpath);
 #ifdef Linux
    strcat(nm,"Obj");
 #endif
@@ -4553,7 +4554,7 @@ for(a=0;a<NUMOBJ;a++)
 load_mobj()
 {
 FILE *fptr;
-char nm[256],nm2[256];
+char nm[512],nm2[512],temppath[512];
 int a;
 #ifdef Linux
 struct tmpobj
@@ -4577,7 +4578,8 @@ a=0;
 #ifdef DOS
 getcwd(PATH,512);
 #endif
-strcat(PATH,LPATH);
+strcpy(temppath,PATH);
+strcat(temppath,LPATH);
 
 #ifdef Linux
 fprintf(stderr,"Copying moving objects to memory...\n");
@@ -4586,7 +4588,7 @@ fprintf(stderr,"Copying moving objects to memory...\n");
 for(a=0;a<NUMMOBJ;a++)
   {
 
-  strcpy(nm,PATH);
+  strcpy(nm,temppath);
 #ifdef Linux
   strcat(nm,"Mobj");
 #endif
@@ -4705,8 +4707,9 @@ a=0;
 #ifdef DOS
 getcwd(PATH,512);
 #endif
-strcat(PATH,LPATH);
+//strcat(PATH,LPATH);
 strcpy(lnm2,PATH);
+strcat(lnm2,LPATH);
 #if 0//def Linux
 //for now change all but first letter to lower case
 tempst=(char *)malloc(11);
@@ -4756,6 +4759,7 @@ else
    }
 close(inhandle);
 strcpy(lnm2,PATH);
+strcat(lnm2,LPATH);
 strcat(lnm2,lname);
 #ifdef Linux
 //strcat(lnm2,newname);
@@ -5131,9 +5135,10 @@ a=0;
 #ifdef DOS
 getcwd(PATH,512);
 #endif
-strcat(PATH,LPATH);
+//strcat(PATH,LPATH);
 
 strcpy(nm,PATH);
+strcat(nm,LPATH);
 #ifdef Linux
   strcat(nm,"EventL.bin");
 #endif
